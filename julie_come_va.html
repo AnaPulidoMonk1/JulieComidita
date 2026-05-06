@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Julie come">
+<meta name="color-scheme" content="light">
+<title>Julie come 🌸</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light only;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:#FFFFFF!important;font-family:'DM Sans',-apple-system,sans-serif;color:#1C1B1F!important;overflow:hidden;}
+:root{
+  --r:#F472B6;--rd:#DB2777;--rl:#FDF2F8;--rm:#FBCFE8;
+  --l:#A78BFA;--ll:#F5F3FF;--lm:#EDE9FE;
+  --m:#34D399;--ml:#ECFDF5;--mm:#D1FAE5;
+  --p:#FB923C;--pl:#FFF7ED;--pm:#FED7AA;
+  --s:#38BDF8;--sl:#F0F9FF;--sm:#BAE6FD;
+  --a:#FBBF24;--al:#FFFBEB;--am:#FDE68A;
+  --bg:#F8F6FF;--w:#FFFFFF;
+  --b1:#F0EEF8;--b2:#E5E2F5;
+  --t1:#1C1B1F;--t2:#5C5C6B;--t3:#A0A0B0;
+}
+.app{max-width:393px;margin:0 auto;height:100dvh;display:flex;flex-direction:column;background:var(--bg);}
+.topbar{background:#fff!important;border-bottom:1.5px solid var(--b1);padding:env(safe-area-inset-top,44px) 18px 0;flex-shrink:0;}
+.topbar-inner{padding:11px 0 12px;display:flex;align-items:center;justify-content:space-between;}
+.logo-row{display:flex;align-items:center;gap:9px;}
+.logo-box{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,#FBCFE8,#EDE9FE);display:flex;align-items:center;justify-content:center;font-size:19px;}
+.app-name{font-family:'DM Serif Display',serif;font-size:20px;color:var(--t1)!important;}
+.day-chip{background:var(--rm);color:var(--rd);font-size:11px;font-weight:600;padding:5px 12px;border-radius:20px;}
+.scroll{flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;}
+.page{display:none;padding:14px 14px 28px;}
+.page.on{display:block;}
+.nav{background:#fff!important;border-top:1.5px solid var(--b1);padding:6px 0 env(safe-area-inset-bottom,16px);display:flex;flex-shrink:0;}
+.nb{flex:1;padding:7px 3px 4px;border:none;background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;border-radius:12px;font-size:10px;font-weight:500;font-family:inherit;color:var(--t3);transition:all .2s;}
+.nb.on{color:var(--rd);background:var(--rl);}
+.nb-i{font-size:21px;line-height:1;}
+
+/* CARDS */
+.card{background:#fff!important;border-radius:20px;padding:15px;margin-bottom:11px;border:1.5px solid var(--b1);}
+.stitle{font-size:10px;font-weight:700;color:var(--t3)!important;text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px;}
+
+/* CALENDAR */
+.wknav{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;}
+.wklbl{font-family:'DM Serif Display',serif;font-size:17px;color:var(--t1)!important;}
+.wkarr{width:33px;height:33px;border-radius:10px;background:var(--rl);border:none;color:var(--rd);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.daygrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;margin-bottom:13px;}
+.dcell{display:flex;flex-direction:column;align-items:center;padding:5px 1px 3px;border-radius:11px;cursor:pointer;border:1.5px solid transparent;transition:all .15s;}
+.dcell .dn{font-size:9px;font-weight:700;color:var(--t3)!important;text-transform:uppercase;}
+.dcell .dd{font-size:14px;font-weight:500;color:var(--t1)!important;margin-top:1px;}
+.dcell .ddot{width:5px;height:5px;border-radius:50%;background:var(--a);margin-top:2px;visibility:hidden;}
+.dcell.food .ddot{visibility:visible;}
+.dcell.today{border-color:var(--rm);}
+.dcell.sel{background:var(--rd)!important;border-color:var(--rd);}
+.dcell.sel .dn,.dcell.sel .dd{color:#fff!important;}
+
+/* NUEVO */
+.ncard{border-radius:20px;padding:18px;margin-bottom:11px;}
+.nc-n{background:linear-gradient(135deg,#FDF2F8,#F5F3FF);}
+.nc-a{background:linear-gradient(135deg,#FFF1F2,#FEE2E2);}
+.nctag{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px;}
+.nctag.n{color:var(--rd);}
+.nctag.a{color:#DC2626;}
+.ncnom{font-family:'DM Serif Display',serif;font-size:23px;color:var(--t1)!important;margin-bottom:5px;line-height:1.2;}
+.ncnote{font-size:13px;color:var(--t2)!important;line-height:1.5;}
+.abox{margin-top:9px;background:rgba(254,226,226,.85);border-radius:10px;padding:9px 12px;font-size:12px;color:#991B1B;line-height:1.4;}
+
+/* GRUPOS */
+.grow{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--b1);}
+.grow:last-child{border:none;}
+.gdot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.gc{background:#FBBF24;}.gv{background:#34D399;}.gp{background:#F87171;}.gf{background:#38BDF8;}.gg{background:#A78BFA;}
+.glbl{font-size:11px;font-weight:500;color:var(--t3)!important;width:58px;flex-shrink:0;}
+.gval{font-size:13px;color:var(--t1)!important;flex:1;line-height:1.3;}
+.gbtn{font-size:11px;font-weight:600;color:var(--rd);background:var(--rl);border:none;border-radius:8px;padding:4px 9px;cursor:pointer;flex-shrink:0;font-family:inherit;}
+
+/* HORARIO */
+.hrow{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--b1);}
+.hrow:last-child{border:none;}
+.hhora{font-size:12px;font-weight:600;color:var(--t2)!important;width:44px;flex-shrink:0;}
+.htxt{font-size:13px;color:var(--t1)!important;flex:1;line-height:1.3;}
+.hpill{font-size:10px;font-weight:600;padding:3px 8px;border-radius:20px;flex-shrink:0;}
+.hpl{background:#DBEAFE;color:#1D4ED8;}
+.hpc{background:var(--mm);color:#065F46;}
+.hps{background:var(--lm);color:#5B21B6;}
+.hpa{background:var(--am);color:#92400E;}
+
+/* AGUA TRACKER */
+.agua-card{background:#fff!important;border-radius:20px;padding:15px;margin-bottom:11px;border:1.5px solid var(--b1);}
+.agua-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.agua-meta{font-size:12px;color:var(--t2)!important;}
+.agua-vasos{display:flex;gap:10px;justify-content:center;margin:4px 0 8px;}
+.vaso-btn{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;background:none;border:none;font-family:inherit;}
+.vaso-ico{font-size:28px;line-height:1;transition:all .2s;filter:grayscale(1) opacity(.35);}
+.vaso-btn.done .vaso-ico{filter:none;}
+.vaso-lbl{font-size:10px;font-weight:500;color:var(--t3)!important;}
+.vaso-btn.done .vaso-lbl{color:var(--s)!important;}
+.agua-note{font-size:11px;color:var(--t3)!important;text-align:center;font-style:italic;}
+
+/* PORCION BADGE */
+.porcion-badge{display:inline-flex;align-items:center;gap:5px;background:var(--am);color:#92400E;font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;margin-bottom:11px;}
+
+/* ALIMENTOS PAGE */
+.ali-hint{font-size:12px;color:var(--t2)!important;margin-bottom:13px;line-height:1.5;padding:10px 12px;background:var(--rl);border-radius:12px;}
+.grupo-section{margin-bottom:16px;}
+.grupo-hdr{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.grupo-hdr-dot{width:12px;height:12px;border-radius:50%;}
+.grupo-hdr-title{font-size:14px;font-weight:600;color:var(--t1)!important;}
+.ali-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;}
+.ali-chip{padding:9px 11px;border-radius:13px;border:1.5px solid var(--b1);background:#fff!important;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .15s;}
+.ali-chip.sc{border-width:2px;}
+.sc-c{border-color:#FBBF24;background:var(--al)!important;}
+.sc-v{border-color:#34D399;background:var(--ml)!important;}
+.sc-p{border-color:#F87171;background:#FFF1F2!important;}
+.sc-f{border-color:#38BDF8;background:var(--sl)!important;}
+.sc-g{border-color:#A78BFA;background:var(--ll)!important;}
+.ali-chip-name{font-size:12px;font-weight:500;color:var(--t1)!important;flex:1;line-height:1.3;}
+.adot{width:6px;height:6px;border-radius:50%;background:#F87171;margin-left:auto;flex-shrink:0;}
+.aprobar-btn{width:100%;padding:13px;background:var(--rd);color:#fff;border:none;border-radius:14px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;margin-top:6px;transition:all .2s;}
+.aprobar-btn:active{transform:scale(.98);}
+
+/* RECETAS */
+.rec-cats{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none;}
+.rec-cats::-webkit-scrollbar{display:none;}
+.rcbtn{font-size:12px;font-weight:500;padding:6px 14px;border-radius:20px;border:1.5px solid var(--b1);background:#fff!important;cursor:pointer;font-family:inherit;color:var(--t2);white-space:nowrap;flex-shrink:0;transition:all .15s;}
+.rcbtn.on{background:var(--rd)!important;border-color:var(--rd);color:#fff;}
+.rcard{background:#fff!important;border-radius:18px;border:1.5px solid var(--b1);margin-bottom:10px;overflow:hidden;}
+.rtop{padding:13px;display:flex;gap:11px;cursor:pointer;align-items:flex-start;}
+.remo{width:50px;height:50px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px;flex-shrink:0;}
+.re-n{background:linear-gradient(135deg,var(--rl),var(--ll));}
+.re-a{background:linear-gradient(135deg,#FFF1F2,#FFE4E6);}
+.re-v{background:linear-gradient(135deg,var(--ml),var(--sl));}
+.re-c{background:linear-gradient(135deg,var(--al),var(--pl));}
+.rinfo{flex:1;min-width:0;}
+.rtit{font-size:14px;font-weight:600;color:var(--t1)!important;margin-bottom:2px;}
+.rsub{font-size:12px;color:var(--t2)!important;}
+.rtags{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;}
+.rtag{font-size:10px;font-weight:600;padding:2px 7px;border-radius:20px;}
+.rt-c{background:var(--al);color:#92400E;}.rt-v{background:var(--ml);color:#065F46;}
+.rt-p{background:#FFF1F2;color:#9F1239;}.rt-f{background:var(--sl);color:#0C4A6E;}
+.rt-g{background:var(--ll);color:#4C1D95;}.rt-a{background:#FEE2E2;color:#991B1B;}
+.rchev{font-size:12px;color:var(--t3);flex-shrink:0;margin-top:2px;transition:transform .2s;}
+.rchev.open{transform:rotate(180deg);}
+.rbody{display:none;padding:0 13px 13px;}
+.rbody.open{display:block;}
+.rsec{font-size:10px;font-weight:700;color:var(--t3)!important;text-transform:uppercase;letter-spacing:.07em;margin:10px 0 5px;}
+.ring{font-size:13px;color:var(--t2)!important;padding:2px 0;line-height:1.5;}
+.ring::before{content:"· ";}
+.rpaso{display:flex;gap:7px;padding:3px 0;}
+.rpn{font-size:13px;font-weight:700;color:var(--rd);flex-shrink:0;}
+.rpt{font-size:13px;color:var(--t1)!important;line-height:1.5;}
+.rnota{margin-top:9px;background:var(--rl);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--rd);font-style:italic;line-height:1.4;}
+.rmark{width:100%;margin-top:11px;padding:11px;border:none;border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;}
+.rmark.off{background:var(--rd);color:#fff;}
+.rmark.on{background:var(--mm);color:#065F46;}
+.cat-sec{margin-bottom:6px;}
+.cat-lbl{font-size:13px;font-weight:600;color:var(--t1)!important;margin-bottom:8px;padding-left:2px;}
+
+/* PROGRESO */
+.stats-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:13px;}
+.sc2{border-radius:16px;padding:13px 12px;display:flex;flex-direction:column;gap:3px;}
+.scr{background:linear-gradient(135deg,var(--rl),var(--rm));}
+.scl{background:linear-gradient(135deg,var(--ll),var(--lm));}
+.scm{background:linear-gradient(135deg,var(--ml),var(--mm));}
+.scp{background:linear-gradient(135deg,var(--pl),var(--pm));}
+.sc-ico{font-size:22px;}
+.sc-num{font-family:'DM Serif Display',serif;font-size:30px;color:var(--t1)!important;line-height:1;}
+.sc-lbl{font-size:11px;font-weight:500;color:var(--t2)!important;}
+.alirow{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--b1);}
+.alirow:last-child{border:none;}
+.alidot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.aliinfo{flex:1;min-width:0;}
+.aliname{font-size:13px;font-weight:500;color:var(--t1)!important;}
+.alicnt{font-size:11px;color:var(--t3)!important;margin-top:1px;}
+.expdots{display:flex;gap:4px;margin-top:5px;flex-wrap:wrap;}
+.exdot{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--b2);background:#fff!important;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;}
+.exdot.dn{background:var(--r)!important;border-color:var(--rd);color:#fff;}
+.exdot.da{background:#FCA5A5!important;border-color:#EF4444;color:#fff;}
+.mkbtn{font-size:11px;font-weight:600;padding:5px 11px;border-radius:20px;border:none;cursor:pointer;font-family:inherit;flex-shrink:0;}
+.mkbtn.off{background:var(--rl);color:var(--rd);}
+.mkbtn.on{background:var(--mm);color:#065F46;}
+.abadge{font-size:9px;background:#FEE2E2;color:#991B1B;padding:1px 6px;border-radius:20px;font-weight:700;}
+
+/* COMPRAS */
+.chead{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.chead-t{font-family:'DM Serif Display',serif;font-size:20px;color:var(--t1)!important;}
+.rst{font-size:12px;color:var(--rd);background:none;border:none;cursor:pointer;font-family:inherit;}
+.pbarw{height:6px;background:var(--b1);border-radius:6px;overflow:hidden;margin-bottom:14px;}
+.pbar{height:100%;background:linear-gradient(90deg,var(--r),var(--l));border-radius:6px;transition:width .4s;}
+.clbl{font-size:10px;font-weight:700;color:var(--t3)!important;text-transform:uppercase;letter-spacing:.07em;margin:12px 0 6px;}
+.crow{display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--b1);cursor:pointer;}
+.crow:last-child{border:none;}
+.chk{width:22px;height:22px;border-radius:7px;border:1.5px solid var(--b2);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .15s;}
+.chk.on{background:var(--rd);border-color:var(--rd);color:#fff;}
+.ctxt{font-size:13px;color:var(--t1)!important;flex:1;line-height:1.3;}
+.ctxt.done{text-decoration:line-through;color:var(--t3)!important;}
+
+/* MODAL */
+.mov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;align-items:flex-end;justify-content:center;}
+.mov.open{display:flex;}
+.msh{background:#fff!important;border-radius:26px 26px 0 0;width:100%;max-width:393px;max-height:78dvh;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,20px);animation:sup .3s cubic-bezier(.4,0,.2,1);}
+@keyframes sup{from{transform:translateY(100%);}to{transform:translateY(0);}}
+.mhdl{width:36px;height:4px;background:var(--b1);border-radius:4px;margin:12px auto 14px;}
+.mhd{padding:0 20px 12px;border-bottom:1px solid var(--b1);}
+.mtit{font-family:'DM Serif Display',serif;font-size:19px;color:var(--t1)!important;margin-bottom:2px;}
+.msub{font-size:13px;color:var(--t2)!important;}
+.mopts{flex:1;overflow-y:auto;padding:13px 20px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;}
+.mopt{padding:10px 11px;border-radius:11px;border:1.5px solid var(--b1);background:#fff!important;font-size:13px;cursor:pointer;text-align:left;font-family:inherit;color:var(--t1);transition:all .15s;line-height:1.4;}
+.mopt.sel{border-color:var(--rd);background:var(--rl)!important;color:var(--rd);font-weight:600;}
+.macts{padding:12px 20px 0;display:flex;gap:8px;}
+.msave{flex:1;padding:13px;background:var(--rd);color:#fff;border:none;border-radius:13px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;}
+.mcancel{padding:13px 15px;background:#fff!important;color:var(--t2);border:1.5px solid var(--b1);border-radius:13px;font-size:14px;cursor:pointer;font-family:inherit;}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="logo-row">
+      <div class="logo-box">🌸</div>
+      <span class="app-name">Julie come</span>
+    </div>
+    <span class="day-chip" id="day-chip">Día 1</span>
+  </div>
+</div>
+<div class="scroll">
+
+  <!-- HOY -->
+  <div class="page on" id="pg-hoy">
+    <div class="wknav">
+      <button class="wkarr" onclick="prevW()">←</button>
+      <span class="wklbl" id="wklbl"></span>
+      <button class="wkarr" onclick="nextW()">→</button>
+    </div>
+    <div class="daygrid" id="daygrid"></div>
+    <div id="hoy-body"></div>
+  </div>
+
+  <!-- ALIMENTOS -->
+  <div class="page" id="pg-alimentos">
+    <p class="ali-hint">Selecciona los alimentos que quieres incluir en el menú de Julie. Los alérgenos tienen el punto rojo — recuerda ofrecerlos 3 días seguidos.</p>
+    <div id="ali-grupos"></div>
+    <button class="aprobar-btn" onclick="aprobar()">Guardar selección ✓</button>
+  </div>
+
+  <!-- RECETAS -->
+  <div class="page" id="pg-recetas">
+    <div class="rec-cats" id="rec-cats"></div>
+    <div id="rec-list"></div>
+  </div>
+
+  <!-- PROGRESO -->
+  <div class="page" id="pg-progreso">
+    <div class="stats-grid" id="stats-grid"></div>
+    <div class="card">
+      <div class="stitle">Alimentos introducidos — toca para registrar</div>
+      <div id="ali-tracker"></div>
+    </div>
+  </div>
+
+  <!-- COMPRAS -->
+  <div class="page" id="pg-compras">
+    <div class="chead">
+      <span class="chead-t">Esta semana</span>
+      <button class="rst" onclick="resetC()">Limpiar</button>
+    </div>
+    <div class="pbarw"><div class="pbar" id="pbar" style="width:0"></div></div>
+    <div id="compras-body"></div>
+  </div>
+
+</div>
+<nav class="nav">
+  <button class="nb on" onclick="nav('hoy',this)"><span class="nb-i">🌸</span>Hoy</button>
+  <button class="nb" onclick="nav('alimentos',this)"><span class="nb-i">🥕</span>Alimentos</button>
+  <button class="nb" onclick="nav('recetas',this)"><span class="nb-i">🍳</span>Recetas</button>
+  <button class="nb" onclick="nav('progreso',this)"><span class="nb-i">📊</span>Progreso</button>
+  <button class="nb" onclick="nav('compras',this)"><span class="nb-i">🛒</span>Compras</button>
+</nav>
+</div>
+
+<!-- MODAL -->
+<div class="mov" id="modal">
+  <div class="msh">
+    <div class="mhdl"></div>
+    <div class="mhd">
+      <div class="mtit" id="mtit">Editar grupo</div>
+      <div class="msub">Selecciona uno o varios alimentos</div>
+    </div>
+    <div class="mopts" id="mopts"></div>
+    <div class="macts">
+      <button class="mcancel" onclick="closeM()">Cancelar</button>
+      <button class="msave" onclick="saveM()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SK='julie26v5';
+const START=new Date(2026,4,10);
+const DIAS=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const MESES=['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
+
+// Horario ajustado para Julie: 2 comidas 6-8m, despierta 6:30-7, duerme 8-8:30, comida familiar 2:30-3:30
+const HORARIO=[
+  {h:'6:30',  txt:'Despertar + leche materna',  t:'l'},
+  {h:'8:30',  txt:'Desayuno — 5 grupos + 1 oz agua 💧', t:'c'},
+  {h:'9:30',  txt:'Juego libre / estimulación', t:'j'},
+  {h:'10:00', txt:'Siesta 1', t:'s'},
+  {h:'12:00', txt:'Despertar + leche materna', t:'l'},
+  {h:'13:00', txt:'Juego / actividades con abuela', t:'j'},
+  {h:'15:00', txt:'Comida familiar — 5 grupos + 1 oz agua 💧', t:'c'},
+  {h:'15:30', txt:'Leche materna', t:'l'},
+  {h:'16:30', txt:'Siesta 2 (corta)', t:'s'},
+  {h:'18:00', txt:'Despertar + juego tranquilo', t:'j'},
+  {h:'19:30', txt:'Baño + rutina de noche', t:'j'},
+  {h:'20:00', txt:'Leche materna', t:'l'},
+  {h:'20:30', txt:'A dormir 🌙', t:'s'},
+];
+
+const MENU_BASE=[
+  {d:1,  nuevo:'Res',          a:false, nota:'Primer alimento. Textura muy líquida, casi agua con sabor. 2-3 cucharaditas bebé.',                c:null,        v:null,              p:'Res',       f:null,           g:null},
+  {d:2,  nuevo:'Sandía',       a:false, nota:'Sin semillas, machacada o licuada. Fría o a temperatura ambiente.',                                  c:null,        v:null,              p:'Res',       f:'Sandía',       g:null},
+  {d:3,  nuevo:'Chayote',      a:false, nota:'Cocido al vapor y licuado. Muy suave y fácil de digerir.',                                          c:null,        v:'Chayote',         p:'Res',       f:'Sandía',       g:null},
+  {d:4,  nuevo:'Avena fort.',  a:false, nota:'Cereal infantil FORTIFICADO (Nestum avena). Mezclar con agua o leche materna.',                      c:'Avena fort.',v:'Chayote',        p:'Res',       f:'Sandía',       g:null},
+  {d:5,  nuevo:'Aceite oliva', a:false, nota:'Unas gotas extra virgen sobre cualquier papilla. Aporta grasas esenciales.',                        c:'Avena fort.',v:'Chayote',        p:'Res',       f:'Sandía',       g:'Aceite oliva'},
+  {d:6,  nuevo:'Zanahoria',    a:false, nota:'Cocida y licuada. Mezcla muy bien con la res.',                                                     c:'Avena fort.',v:'Chayote/Zanahoria',p:'Res',    f:'Sandía',       g:'Aceite oliva'},
+  {d:7,  nuevo:'Plátano',      a:false, nota:'Machacado maduro. Endulza naturalmente. Mezcla bien con avena.',                                    c:'Avena fort.',v:'Chayote/Zanahoria',p:'Res',    f:'Sandía/Plátano',g:'Aceite oliva'},
+  {d:8,  nuevo:'Huevo (yema)', a:true,  nota:'⚠ ALÉRGENO — ofrecer días 8, 9 y 10. Yema 100% cocida (hervir 12 min). Observar 2 hrs.',           c:'Avena fort.',v:'Chayote/Zanahoria',p:'Res/Huevo',f:'Sandía/Plátano',g:'Aceite oliva'},
+  {d:9,  nuevo:'Huevo rep 2/3',a:true,  nota:'⚠ Día 2 del huevo. Sin alimento nuevo. Seguir observando reacción.',                                c:'Avena fort.',v:'Chayote/Zanahoria',p:'Res/Huevo',f:'Sandía/Plátano',g:'Aceite oliva'},
+  {d:10, nuevo:'Huevo rep 3/3',a:true,  nota:'⚠ Día 3 del huevo. Si no hay reacción, puedes continuar normalmente.',                             c:'Avena fort.',v:'Chayote/Zanahoria',p:'Res/Huevo',f:'Sandía/Plátano',g:'Aceite oliva'},
+  {d:11, nuevo:'Ejote',        a:false, nota:'Cocido al vapor y licuado.',                                                                         c:'Avena fort.',v:'Chayote/Zanahoria/Ejote',p:'Res/Huevo',f:'Sandía/Plátano',g:'Aceite oliva'},
+  {d:12, nuevo:'Almendra',     a:true,  nota:'⚠ ALÉRGENO — ofrecer días 12, 13 y 14. Solo la punta de la cuchara (crema).',                      c:'Avena fort.',v:'Chayote/Zanahoria/Ejote',p:'Res/Huevo',f:'Sandía/Plátano',g:'Aceite oliva/Almendra'},
+  {d:13, nuevo:'Almendra 2/3', a:true,  nota:'⚠ Día 2 de almendra. Sin alimento nuevo adicional.',                                                c:'Avena fort.',v:'Chayote/Zanahoria/Ejote',p:'Res/Huevo',f:'Sandía/Plátano',g:'Aceite oliva/Almendra'},
+  {d:14, nuevo:'Almendra 3/3', a:true,  nota:'⚠ Día 3 de almendra. Si sin reacción, continúa al día 15.',                                        c:'Avena fort.',v:'Chayote/Zanahoria/Ejote',p:'Res/Huevo',f:'Sandía/Plátano',g:'Aceite oliva/Almendra'},
+  {d:15, nuevo:'Papa',         a:false, nota:'Hervida y machacada. Mezcla perfecta con res y aceite de oliva.',                                   c:'Avena fort.',v:'Chayote/Zanahoria/Ejote/Papa',p:'Res/Huevo',f:'Sandía/Plátano',g:'Aceite oliva/Almendra'},
+];
+
+const GRUPOS_DEF=[
+  {k:'c',lbl:'Cereal',  dot:'gc'},{k:'v',lbl:'Verdura', dot:'gv'},
+  {k:'p',lbl:'Proteína',dot:'gp'},{k:'f',lbl:'Fruta',   dot:'gf'},{k:'g',lbl:'Grasa',   dot:'gg'},
+];
+
+const LIBRO={
+  c:{label:'Cereales y granos',   dot:'gc', opts:['Avena fort.','Arroz fort.','Quinoa','Pasta','Tortilla maíz','Pan integral','Cebada','Mijo','Amaranto']},
+  v:{label:'Verduras',            dot:'gv', opts:['Chayote','Zanahoria','Calabaza','Brócoli','Ejote','Papa','Camote','Coliflor','Espinaca','Betabel','Chícharo','Jitomate','Elote','Apio','Pepino','Poro','Aguacate']},
+  p:{label:'Proteína animal/vegetal',dot:'gp',opts:['Res','Pollo','Huevo ⚠','Salmón','Cerdo','Atún sin sal','Frijoles','Lentejas','Garbanzo','Alubia','Hígado pollo','Tofu','Edamame']},
+  f:{label:'Frutas',              dot:'gf', opts:['Sandía','Plátano','Durazno','Manzana','Mango','Pera','Ciruela','Melón','Frambuesa','Guayaba','Kiwi','Papaya','Blueberry','Nectarina','Uva sin piel','Mandarina','Piña']},
+  g:{label:'Grasas saludables',   dot:'gg', opts:['Aceite oliva','Aguacate','Almendra ⚠','Cacahuate ⚠','Nuez (polvo)','Linaza molida','Aceite coco','Cáñamo (semilla)','Pistache ⚠ (polvo)']},
+};
+
+const REC_CATS=['Todas','Primeras comidas','Altas en hierro','Papillas','Snacks','BLW / Finger food','Prep sábado','Sin cocción','Recetas familiares','Con leche materna'];
+
+const RECETAS=[
+  // PRIMERAS COMIDAS
+  {id:'r01',tit:'Papilla de res',e:'🥩',sub:'30 min · 8 cubos',cat:'Primeras comidas',gs:['p'],a:false,emo:'n',
+   ings:['50-80g filete o carne molida sin sal','Agua o caldo natural sin sal'],
+   pasos:['Cocer la carne en agua ~25 min hasta muy suave.','Licuar con el caldo de cocción.','Día 1-2: textura muy líquida. Espesar poco a poco cada semana.','Congelar en charola de hielos BPA-free.'],
+   nota:'2-3 cucharaditas al inicio. Meta: ¼ a ½ taza por comida a los 6-8 meses.'},
+  {id:'r02',tit:'Res en palitos BLW',e:'🥩',sub:'30 min · método BLW',cat:'Primeras comidas',gs:['p'],a:false,emo:'n',
+   ings:['Bistec o filete cocido muy suave (sin sal)'],
+   pasos:['Cocer al vapor o hervido hasta muy tierno (~25 min).','Cortar en tiras largas del tamaño del puño de Julie.','Ofrecer para que agarre y chupe — extrae el jugo y proteína.','Supervisar siempre. Nunca trozos pequeños sueltos.'],
+   nota:'Solo palitos 6-9 meses. La textura suave es clave para que no se atragante.'},
+  {id:'r03',tit:'Yema de huevo cocida',e:'🥚',sub:'15 min · alérgeno ⚠',cat:'Primeras comidas',gs:['p'],a:true,emo:'a',
+   ings:['1 huevo entero (solo la yema al inicio)'],
+   pasos:['Hervir el huevo exactamente 12 minutos.','Retirar la clara — solo usar la yema.','Machacar con papilla o aceite de oliva.','Ofrecer días 8, 9 y 10 seguidos sin alimento nuevo adicional.','Observar: sarpullido, vómito o diarrea las 2 horas siguientes.'],
+   nota:'⚠ Yema SIEMPRE bien cocida. La clara puede introducirse después del año.'},
+  {id:'r04',tit:'Crema de almendra casera',e:'🥜',sub:'10 min + 8h remojo · ⚠',cat:'Primeras comidas',gs:['g'],a:true,emo:'a',
+   ings:['100g almendras crudas sin sal'],
+   pasos:['Remojar almendras 8 horas en agua fría. Escurrir.','Procesar en licuadora 8-10 min, raspando los lados frecuentemente.','Guardar en frasco de vidrio en refrigerador (dura 2-3 semanas).','Ofrecer SOLO la punta de la cuchara — nunca una cucharada completa.'],
+   nota:'⚠ Solo la punta. Un pegote completo puede atascar el paladar del bebé.'},
+  // ALTAS EN HIERRO
+  {id:'r05',tit:'Hígado de pollo salteado',e:'🍗',sub:'15 min · hierro alto',cat:'Altas en hierro',gs:['p'],a:false,emo:'v',
+   ings:['2-3 piezas hígado de pollo limpio','1 cda aceite de oliva (sin sal)'],
+   pasos:['Limpiar el hígado retirando membranas.','Saltear en aceite a fuego medio ~8 min voltear a la mitad.','Verificar que esté completamente cocido por dentro.','Para papilla: licuar con caldo. Para BLW: ofrecer en tiras.'],
+   nota:'La fuente más rica en hierro. Ofrecer 1-2 veces por semana máximo.'},
+  {id:'r06',tit:'Papilla de lentejas rojas',e:'🫘',sub:'25 min · hierro vegetal',cat:'Altas en hierro',gs:['p'],a:false,emo:'v',
+   ings:['¼ taza lentejas rojas','Agua','Unas gotas aceite de oliva'],
+   pasos:['Enjuagar muy bien las lentejas.','Hervir en agua el doble 20-25 min hasta muy suaves.','Licuar con el agua de cocción y aceite de oliva.','Ajustar textura — debe quedar muy suave.'],
+   nota:'Las lentejas rojas son las más digestivas y ricas en hierro vegetal.'},
+  {id:'r07',tit:'Res con espinaca y aceite',e:'🥬',sub:'25 min · combo hierro',cat:'Altas en hierro',gs:['p','v'],a:false,emo:'v',
+   ings:['40g res cocida','¼ taza espinaca (cocida, máx 2x semana)','Aceite de oliva'],
+   pasos:['Hervir espinaca 5 min y tirar el agua (elimina nitratos).','Licuar espinaca con la res cocida y aceite.','Textura suave homogénea.','Ofrecer tibio.'],
+   nota:'La espinaca máximo 2 veces por semana por los nitratos. Siempre hervir y tirar el agua.'},
+  {id:'r08',tit:'Frijoles negros licuados',e:'🫘',sub:'20 min · hierro + fibra',cat:'Altas en hierro',gs:['p'],a:false,emo:'v',
+   ings:['¼ taza frijoles negros cocidos sin sal','Aceite de oliva','Agua de cocción'],
+   pasos:['Usar frijoles ya cocidos (sin sal) o de bote bien enjuagados.','Licuar con agua de cocción y aceite.','Pasar por colador si deseas textura más suave.','Ofrecer como papilla o dip para BLW.'],
+   nota:'Muy alta en hierro y proteína vegetal. Combinar con vitamina C (jitomate, limón) para mejor absorción.'},
+  // PAPILLAS
+  {id:'r09',tit:'Papilla chayote + res',e:'🥦',sub:'20 min · 6 cubos',cat:'Papillas',gs:['v','p'],a:false,emo:'n',
+   ings:['¼ chayote pelado picado','30-40g res cocida','Unas gotas aceite de oliva'],
+   pasos:['Hervir chayote ~15 min hasta muy suave.','Licuar con la res y aceite.','Ajustar textura con agua de cocción.','Servir tibio, nunca caliente.'],
+   nota:'El chayote es el más suave y digestivo para empezar. Muy bien tolerado.'},
+  {id:'r10',tit:'Puré papa + res + yema',e:'🥔',sub:'20 min · completo',cat:'Papillas',gs:['v','p'],a:false,emo:'n',
+   ings:['½ papa mediana','30g res cocida','1 yema bien cocida (12 min)','Aceite de oliva'],
+   pasos:['Hervir la papa hasta muy suave (~20 min).','Machacar o licuar bien.','Incorporar res desmenuzada y yema machacada.','Agregar aceite y mezclar hasta suave.'],
+   nota:'Yema siempre 100% cocida. Muy nutritivo y saciante.'},
+  {id:'r11',tit:'Avena con plátano',e:'🍌',sub:'10 min · desayuno rápido',cat:'Papillas',gs:['c','f'],a:false,emo:'c',
+   ings:['2 cdas avena infantil fort.','¼ plátano muy maduro','Agua o leche materna'],
+   pasos:['Preparar avena con agua según indicaciones del paquete.','Machacar el plátano con tenedor hasta suave.','Mezclar ambos mientras la avena está tibia.','Ajustar consistencia con leche materna.'],
+   nota:'El plátano maduro (con manchas negras) endulza naturalmente. Sin azúcar añadida.'},
+  {id:'r12',tit:'Papilla de zanahoria y camote',e:'🥕',sub:'25 min · beta-carotenos',cat:'Papillas',gs:['v'],a:false,emo:'v',
+   ings:['1 zanahoria mediana','½ camote pequeño','Aceite de oliva'],
+   pasos:['Pelar y picar zanahoria y camote en trozos pequeños.','Cocer al vapor 20 min o hervir hasta muy suaves.','Licuar con aceite y un poco del agua de cocción.','Ajustar textura — color naranja intenso.'],
+   nota:'Altísima en betacarotenos y vitamina A. El sabor dulce natural encanta a los bebés.'},
+  {id:'r13',tit:'Papilla de brócoli y papa',e:'🥦',sub:'20 min · calcio + vitamina C',cat:'Papillas',gs:['v'],a:false,emo:'v',
+   ings:['½ taza brócoli en floretes','½ papa mediana','Aceite de oliva'],
+   pasos:['Pelar la papa y picarla. Separar el brócoli en floretes pequeños.','Cocer al vapor juntos ~15-18 min.','Licuar con aceite y agua de cocción.','Textura suave y homogénea, color verde.'],
+   nota:'El brócoli aporta calcio, vitamina C y K. La papa suaviza el sabor fuerte.'},
+  {id:'r14',tit:'Papilla de mango y avena',e:'🥭',sub:'10 min · vitamina C',cat:'Papillas',gs:['f','c'],a:false,emo:'v',
+   ings:['¼ mango maduro pelado','2 cdas avena infantil fort.','Agua'],
+   pasos:['Pelar y picar el mango. Licuar hasta suave.','Preparar avena con agua según indicaciones.','Mezclar el puré de mango con la avena tibia.','Servir templado.'],
+   nota:'El mango maduro es dulce y rico en vitamina C, que ayuda a absorber el hierro.'},
+  {id:'r15',tit:'Papilla de pera y avena',e:'🍐',sub:'15 min · digestiva',cat:'Papillas',gs:['f','c'],a:false,emo:'c',
+   ings:['½ pera pelada sin semillas','2 cdas avena infantil fort.','Agua'],
+   pasos:['Pelar, descorazonar y picar la pera.','Cocer al vapor 8-10 min hasta suave.','Licuar y mezclar con avena preparada.','Ajustar textura.'],
+   nota:'La pera es muy digestiva y ayuda contra el estreñimiento — perfecta si Julie está constipada.'},
+  {id:'r16',tit:'Papilla de calabaza y pollo',e:'🎃',sub:'25 min · proteína suave',cat:'Papillas',gs:['v','p'],a:false,emo:'v',
+   ings:['½ taza calabaza pelada','30g pechuga de pollo cocida sin sal','Aceite de oliva'],
+   pasos:['Cocer calabaza al vapor ~15 min.','Cocer la pechuga sin sal hasta muy tierna.','Licuar calabaza, pollo y aceite juntos.','Ajustar con agua de cocción.'],
+   nota:'El pollo es más suave que la res para empezar. Proteína de alta calidad.'},
+  // SNACKS
+  {id:'r17',tit:'Lanzas de sandía BLW',e:'🍉',sub:'5 min · sin cocción',cat:'Snacks',gs:['f'],a:false,emo:'v',
+   ings:['Sandía fresca sin semillas'],
+   pasos:['Cortar en triángulos o tiras largas (5-6 cm).','Retirar TODAS las semillas con mucho cuidado.','Mantener la cáscara verde como "mango" para que Julie agarre.','Ofrecer fría o a temperatura ambiente.'],
+   nota:'La cáscara ayuda al agarre BLW. Textura perfecta desde el día 2. Muy hidratante.'},
+  {id:'r18',tit:'Plátano maduro BLW',e:'🍌',sub:'2 min · snack fácil',cat:'Snacks',gs:['f'],a:false,emo:'v',
+   ings:['1 plátano muy maduro (con manchas negras)'],
+   pasos:['Pelar solo hasta la mitad — dejar la cáscara como mango.','Para papilla: machacar con tenedor.','Para BLW: ofrecer en mitades con cáscara para agarrar.','Dejar que Julie chupe y agarre sola.'],
+   nota:'Entre más maduro, más dulce y más fácil de aplastar. Ideal primer snack sin preparación.'},
+  {id:'r19',tit:'Hummus bebé (sin tahini)',e:'🫘',sub:'5 min · proteína + hierro',cat:'Snacks',gs:['p'],a:false,emo:'v',
+   ings:['¼ taza garbanzo cocido sin sal','1 cda aceite de oliva','Unas gotas de limón','Agua al gusto'],
+   pasos:['Enjuagar bien el garbanzo cocido.','Licuar con aceite, limón y agua hasta suave.','Textura cremosa — ajustar con más agua si es necesario.','Ofrecer como dip con verduras cocidas o como papilla.'],
+   nota:'Sin tahini (ajonjolí) hasta introducirlo por separado. Rico en proteína y hierro vegetal.'},
+  {id:'r20',tit:'Avena con manzana y canela',e:'🍎',sub:'15 min · desayuno otoñal',cat:'Snacks',gs:['c','f'],a:false,emo:'c',
+   ings:['2 cdas avena infantil fort.','¼ manzana pelada sin cáscara','Pizca de canela (opcional)','Agua'],
+   pasos:['Rallar o picar finamente la manzana.','Cocer la manzana rallada en poca agua 5 min.','Preparar avena y mezclar con la manzana cocida.','Agregar una pizca de canela si deseas.'],
+   nota:'La canela es segura para bebés y agrega sabor cálido sin azúcar. La manzana cocida es muy digestiva.'},
+  {id:'r21',tit:'Durazno con avena',e:'🍑',sub:'10 min · dulce natural',cat:'Snacks',gs:['f','c'],a:false,emo:'c',
+   ings:['½ durazno maduro pelado','2 cdas avena infantil fort.','Agua'],
+   pasos:['Pelar y deshuesar el durazno.','Cocer al vapor 5-7 min si no está muy maduro.','Machacar o licuar el durazno.','Mezclar con avena preparada.'],
+   nota:'El durazno maduro no necesita cocción. Rico en vitamina A y fibra.'},
+  // PREP SÁBADO
+  {id:'r22',tit:'Batch de verduras semanales',e:'🫙',sub:'45 min · semana completa',cat:'Prep sábado',gs:['v'],a:false,emo:'c',
+   ings:['1 chayote grande','3 zanahorias','1 taza ejotes','2 papas medianas','1 camote mediano'],
+   pasos:['Pelar y picar todas las verduras por separado.','Cocer al vapor en tandas: papa/camote 20 min, chayote/zanahoria 15 min, ejote 10 min.','Licuar por separado con un poco del agua de cocción.','Dejar enfriar completamente antes de congelar.','Porcionar en charola de hielos. Congelar toda la noche.','Pasar cubos a bolsas de silicón con etiqueta: nombre + fecha.'],
+   nota:'Un sábado de prep = semana completa. Cada cubo ≈ 1 porción. Duran 1 mes en congelador.'},
+  {id:'r23',tit:'Batch de res semanal',e:'🥩',sub:'35 min · proteína lista',cat:'Prep sábado',gs:['p'],a:false,emo:'c',
+   ings:['200-300g carne molida o filete sin sal','Agua o caldo sin sal'],
+   pasos:['Cocer la carne en agua hasta muy suave (~25 min) sin sal.','Dividir en dos: mitad papilla, mitad BLW.','PAPILLA — licuar con caldo, porcionar en charola de hielos y congelar.','BLW — cortar en tiras largas, refrigerar en contenedor hermético.','Etiquetar todo con fecha.'],
+   nota:'Refrigerada dura 3 días. Congelada (papilla) hasta 1 mes. La proteína más importante de la semana.'},
+  {id:'r24',tit:'Crema de almendra (batch)',e:'🥜',sub:'10 min + remojo · stock',cat:'Prep sábado',gs:['g'],a:true,emo:'a',
+   ings:['200g almendras crudas sin sal'],
+   pasos:['Remojar almendras 8 horas. Escurrir.','Procesar en licuadora 8-10 min, raspando los lados.','Dividir en dos frascos de vidrio.','Refrigerar — dura 3 semanas.','Recordar: SOLO la punta de la cuchara para Julie.'],
+   nota:'⚠ Preparar el viernes para tener listo. Etiqueta con fecha de inicio.'},
+  {id:'r25',tit:'Batch de avena con frutas',e:'🥣',sub:'20 min · desayunos listos',cat:'Prep sábado',gs:['c','f'],a:false,emo:'c',
+   ings:['1 taza avena infantil fort.','2 plátanos maduros','2 manzanas peladas','Agua'],
+   pasos:['Preparar avena básica con agua (sin sal, sin azúcar).','Machacar plátanos maduros.','Cocer manzana picada en poca agua 8 min. Machacar.','Porcionar avena en cubos de hielo.','Guardar purés de fruta por separado en pequeños frascos.','Al servirla abuela mezcla cubo de avena + fruta del día.'],
+   nota:'La fruta se mezcla AL MOMENTO — no congelar mezclada para conservar vitaminas.'},
+  // SIN COCCIÓN
+  {id:'r26',tit:'Papilla de sandía pura',e:'🍉',sub:'2 min · hidratación',cat:'Sin cocción',gs:['f'],a:false,emo:'v',
+   ings:['2-3 cubos de sandía sin semillas'],
+   pasos:['Retirar absolutamente todas las semillas.','Licuar o machacar hasta obtener jugo espeso.','Ofrecer fría o a temperatura ambiente.','Mezclar con avena si quieres espesar.'],
+   nota:'Muy alta en agua — excelente para hidratación. Primer fruta recomendada.'},
+  {id:'r27',tit:'Aguacate machacado',e:'🥑',sub:'2 min · grasa ideal',cat:'Sin cocción',gs:['g','v'],a:false,emo:'v',
+   ings:['¼ aguacate maduro'],
+   pasos:['Abrir el aguacate y retirar la semilla.','Machacar con tenedor hasta suave.','Para papilla: ofrecer solo o mezclado con otra papilla.','Para BLW: ofrecer en gajos con cáscara como agarre.'],
+   nota:'El aguacate es una de las mejores grasas para el bebé. Sin cocción y listo en 2 minutos.'},
+  {id:'r28',tit:'Plátano con crema de almendra',e:'🍌',sub:'3 min · snack premium',cat:'Sin cocción',gs:['f','g'],a:true,emo:'a',
+   ings:['½ plátano maduro','Punta de cuchara de crema de almendra'],
+   pasos:['Machacar el plátano o cortar en rodajas.','Agregar la punta de la cuchara de crema de almendra encima.','Mezclar bien.','Para BLW: ofrecer el plátano en tiras con crema untada.'],
+   nota:'⚠ Solo si ya introdujiste la almendra sin reacción. Solo la punta de la cuchara.'},
+,
+
+  // ── PRIMERAS COMIDAS adicionales ─────────────────────────────
+  {id:'r29',tit:'Pollo deshebrado suave',e:'🍗',sub:'30 min · versátil',cat:'Primeras comidas',gs:['p'],a:false,emo:'n',
+   ings:['100g pechuga de pollo sin piel ni sal','Agua o caldo sin sal'],
+   pasos:['Cocer la pechuga en agua a fuego medio ~25 min.','Retirar y dejar enfriar ligeramente.','PAPILLA — desmenuzar y licuar con caldo hasta suave.','BLW — desmenuzar en hebras largas o cortar en tiras.','Refrigerar 3 días o congelar hasta 1 mes.'],
+   nota:'El pollo es más suave que la res — ideal si Julie tiene sensibilidad. Muy versátil para mezclar con cualquier verdura.'},
+  {id:'r30',tit:'Salmón al vapor',e:'🐟',sub:'15 min · omega-3',cat:'Primeras comidas',gs:['p'],a:false,emo:'n',
+   ings:['80g filete de salmón fresco sin sal'],
+   pasos:['Colocar salmón en vaporera sobre agua hirviendo.','Cocinar 8-10 min hasta completamente cocido.','PAPILLA — desmenuzar y licuar con agua de vapor.','BLW — ofrecer en trozos grandes — el salmón se desmenuza solo.','Verificar sin espinas antes de ofrecer.'],
+   nota:'Rico en omega-3 para el desarrollo cerebral. Introducir antes de otros pescados.'},
+  {id:'r31',tit:'Tofu suave salteado',e:'🫘',sub:'10 min · proteína vegetal',cat:'Primeras comidas',gs:['p'],a:false,emo:'v',
+   ings:['50g tofu suave (silken tofu)','1 cdita aceite de oliva'],
+   pasos:['Escurrir bien el tofu. Cortar en cubos o tiras.','Saltear en aceite a fuego medio 3-4 min por lado.','PAPILLA — machacar con tenedor — se deshace fácilmente.','BLW — ofrecer en tiras o cubos.','Sin sal ni condimentos.'],
+   nota:'El tofu suave se aplasta fácil con las encías. Buena fuente de proteína vegetal y calcio.'},
+  // ── PAPILLAS adicionales ──────────────────────────────────────
+  {id:'r32',tit:'Papilla verde de brócoli y pollo',e:'🥦',sub:'20 min · calcio + proteína',cat:'Papillas',gs:['v','p'],a:false,emo:'v',
+   ings:['½ taza brócoli en floretes','30g pollo cocido','Aceite de oliva'],
+   pasos:['Cocer brócoli al vapor 12 min.','Licuar con pollo y aceite.','Ajustar con agua de cocción.','Servir tibio — color verde brillante.'],
+   nota:'El color verde puede asustar al principio — es completamente normal. Sigue ofreciéndolo.'},
+  {id:'r33',tit:'Puré de calabaza y jengibre',e:'🎃',sub:'20 min · digestivo',cat:'Papillas',gs:['v'],a:false,emo:'v',
+   ings:['1 taza calabaza pelada en cubos','Pizca mínima de jengibre fresco rallado','Aceite de oliva'],
+   pasos:['Cocer calabaza al vapor 15-18 min.','Licuar con aceite y una pizca muy pequeña de jengibre.','Ajustar textura con agua.','Probar que el jengibre sea muy sutil.'],
+   nota:'El jengibre en cantidad mínima es seguro y ayuda a la digestión. La calabaza es dulce y bien aceptada.'},
+  {id:'r34',tit:'Papilla de betabel',e:'🫚',sub:'35 min · hierro + color',cat:'Papillas',gs:['v'],a:false,emo:'v',
+   ings:['1 betabel mediano','Aceite de oliva'],
+   pasos:['Pelar el betabel con guantes (mancha mucho).','Cocer en agua hirviendo 30-35 min.','Licuar con aceite y agua de cocción.','Color morado intenso — normal que tiña el pañal.'],
+   nota:'¡Avisa a la abuela! El pañal puede salir rojo/morado — es el betabel, no sangre.'},
+  {id:'r35',tit:'Papilla de chícharo',e:'🫛',sub:'15 min · verde y nutritiva',cat:'Papillas',gs:['v','p'],a:false,emo:'v',
+   ings:['½ taza chícharos frescos o congelados sin sal','Aceite de oliva'],
+   pasos:['Hervir chícharos 8-10 min.','Licuar con aceite.','Colar para eliminar las pieles si deseas.','Textura cremosa verde brillante.'],
+   nota:'Introduce sabores verdes desde temprano — ayuda a aceptar verduras a largo plazo.'},
+  {id:'r36',tit:'Puré de camote y coco',e:'🍠',sub:'25 min · sabor tropical',cat:'Papillas',gs:['v','g'],a:false,emo:'v',
+   ings:['1 camote mediano','2 cdas leche de coco sin azúcar','Canela (pizca)'],
+   pasos:['Hornear camote a 200°C por 45 min o hervir pelado 20 min.','Machacar bien la pulpa.','Mezclar con leche de coco y canela.','Servir tibio.'],
+   nota:'El camote horneado es más dulce. La leche de coco aporta grasas saludables.'},
+  {id:'r37',tit:'Papilla de coliflor y papa',e:'🥛',sub:'20 min · suave y cremosa',cat:'Papillas',gs:['v'],a:false,emo:'n',
+   ings:['½ taza coliflor en floretes','½ papa mediana','Aceite de oliva'],
+   pasos:['Cocer coliflor y papa al vapor 18 min.','Licuar con aceite y agua.','Textura muy suave, color crema.','Agregar gotas de limón para vitamina C.'],
+   nota:'La coliflor mezclada con papa queda suave y cremosa. Muy digestiva.'},
+  {id:'r38',tit:'Crema de aguacate y plátano',e:'🥑',sub:'3 min · sin cocción',cat:'Papillas',gs:['g','f'],a:false,emo:'v',
+   ings:['¼ aguacate maduro','¼ plátano muy maduro'],
+   pasos:['Machacar aguacate con tenedor.','Machacar el plátano por separado.','Mezclar ambos hasta cremoso.','Listo en 3 minutos.'],
+   nota:'Perfecto desayuno rápido entre semana. Ambos aportan grasas saludables y energía.'},
+  {id:'r39',tit:'Papilla de manzana y zanahoria',e:'🍎',sub:'20 min · vitaminas A y C',cat:'Papillas',gs:['f','v'],a:false,emo:'c',
+   ings:['½ manzana pelada','1 zanahoria mediana','Canela (pizca)'],
+   pasos:['Pelar y picar manzana y zanahoria.','Cocer al vapor juntas 15 min.','Licuar con canela y agua.','Color naranja-dorado.'],
+   nota:'La vitamina C de la manzana potencia la absorción del beta-caroteno de la zanahoria.'},
+  // ── ALTAS EN HIERRO adicionales ──────────────────────────────
+  {id:'r40',tit:'Res con jitomate',e:'🍅',sub:'25 min · hierro + vitamina C',cat:'Altas en hierro',gs:['p','v'],a:false,emo:'v',
+   ings:['40g res cocida','1 jitomate pequeño pelado sin semillas','Aceite de oliva'],
+   pasos:['Blanquear el jitomate, pelar y retirar semillas.','Licuar jitomate con res cocida y aceite.','Calentar ligeramente.','Color rosa-naranja, sabor umami suave.'],
+   nota:'La vitamina C del jitomate multiplica la absorción del hierro de la res. Combinación ideal.'},
+  {id:'r41',tit:'Lentejas con camote',e:'🫘',sub:'30 min · hierro + betacarotenos',cat:'Altas en hierro',gs:['p','v'],a:false,emo:'v',
+   ings:['¼ taza lentejas rojas','¼ camote pelado','Aceite de oliva'],
+   pasos:['Enjuagar lentejas. Picar camote.','Hervir juntos en agua doble 20-25 min.','Licuar con aceite y agua.','Textura naranja cremosa.'],
+   nota:'Hierro vegetal + betacarotenos en un solo plato. Las lentejas rojas son las más digestivas.'},
+  {id:'r42',tit:'Garbanzo con zanahoria y limón',e:'🫘',sub:'15 min · hierro + vitamina C',cat:'Altas en hierro',gs:['p','v'],a:false,emo:'v',
+   ings:['¼ taza garbanzo cocido sin sal','1 zanahoria cocida','Unas gotas de limón','Aceite de oliva'],
+   pasos:['Usar garbanzo cocido (bote sin sal bien enjuagado).','Licuar con zanahoria, limón y aceite.','Colar si quieres más suave.','BLW — garbanzos aplastados entre los dedos.'],
+   nota:'El limón duplica la absorción del hierro vegetal. Aplasta bien los garbanzos para BLW.'},
+  // ── BLW / FINGER FOOD ────────────────────────────────────────
+  {id:'r43',tit:'Palitos de zanahoria al vapor',e:'🥕',sub:'15 min · BLW clásico',cat:'BLW / Finger food',gs:['v'],a:false,emo:'v',
+   ings:['2 zanahorias medianas'],
+   pasos:['Pelar y cortar en palitos de 5-6 cm.','Cocer al vapor 12-15 min.','TEST: aplasta fácil entre pulgar e índice = listo.','Enfriar antes de ofrecer.'],
+   nota:'La zanahoria SIEMPRE cocida para bebés — nunca cruda. El test del dedo es esencial para BLW seguro.'},
+  {id:'r44',tit:'Floretes de brócoli al vapor',e:'🥦',sub:'12 min · agarre perfecto',cat:'BLW / Finger food',gs:['v'],a:false,emo:'v',
+   ings:['6-8 floretes de brócoli con tallo largo'],
+   pasos:['Separar floretes dejando tallo largo como mango.','Cocer al vapor 10-12 min.','El tallo sirve para que Julie agarre.','Ofrecer tibio o frío.'],
+   nota:'El tallo es el "mango" perfecto para BLW. Julie agarra el tallo y come el florete.'},
+  {id:'r45',tit:'Tiras de camote al horno',e:'🍠',sub:'35 min · sábado BLW',cat:'BLW / Finger food',gs:['v'],a:false,emo:'c',
+   ings:['1 camote mediano','1 cdita aceite de oliva'],
+   pasos:['Precalentar horno 200°C.','Pelar y cortar en tiras de 1cm de grosor.','Untar con aceite.','Hornear 25-30 min volteando a la mitad.','Muy suaves por dentro.'],
+   nota:'El camote horneado queda más dulce y mejor textura BLW que hervido. Ideal para preparar el sábado.'},
+  {id:'r46',tit:'Tortilla de huevo y verdura',e:'🍳',sub:'10 min · BLW + papilla',cat:'BLW / Finger food',gs:['p','v'],a:true,emo:'a',
+   ings:['1 huevo entero','1 cda zanahoria cocida rallada','Aceite de oliva'],
+   pasos:['Batir el huevo bien.','Añadir zanahoria rallada cocida.','Cocinar en sartén con aceite a fuego bajo tapado.','100% cuajado sin partes líquidas.','Tiras para BLW o desmenuzar para papilla.'],
+   nota:'⚠ Solo después de confirmar tolerancia al huevo (días 8-10). Sin partes líquidas en absoluto.'},
+  {id:'r47',tit:'Palitos de papa horneada',e:'🥔',sub:'35 min · sábado BLW',cat:'BLW / Finger food',gs:['v'],a:false,emo:'c',
+   ings:['2 papas medianas','Aceite de oliva'],
+   pasos:['Precalentar horno 200°C.','Pelar y cortar en bastones gruesos.','Untar con aceite.','Hornear 28-30 min hasta suaves y dorados.','Test del dedo: deben aplastarse fácil.'],
+   nota:'Sin sal. Hacer batch grande el sábado y refrigerar para la semana.'},
+  {id:'r48',tit:'Cubos de tofu a la plancha',e:'🫘',sub:'8 min · BLW rápido',cat:'BLW / Finger food',gs:['p'],a:false,emo:'v',
+   ings:['100g tofu firme sin sal','Aceite de oliva'],
+   pasos:['Escurrir tofu y secar con papel.','Cortar en cubos de 2cm o tiras.','Calentar aceite en sartén a fuego medio.','Dorar 3-4 min por cada lado.','Enfriar antes de ofrecer.'],
+   nota:'El tofu firme a la plancha tiene mejor textura para BLW — Julie puede agarrarlo sin que se deshaga.'},
+  // ── RECETAS FAMILIARES ────────────────────────────────────────
+  {id:'r49',tit:'Sopa de verduras familiar',e:'🍲',sub:'35 min · toda la familia',cat:'Recetas familiares',gs:['v','p'],a:false,emo:'c',
+   ings:['1 zanahoria','1 papa','1 chayote','½ taza frijoles cocidos','Caldo sin sal','Aceite de oliva'],
+   pasos:['Pelar y picar verduras en cubos pequeños.','Hervir en caldo sin sal 20-25 min.','JULIE PAPILLA — licuar una porción con aceite.','JULIE BLW — sacar verduras cocidas aplastables.','FAMILIA — agregar sal en el plato individual.'],
+   nota:'Cocinar sin sal y salar en el plato. Julie come lo mismo que la familia adaptado.'},
+  {id:'r50',tit:'Arroz con pollo sin sal',e:'🍚',sub:'35 min · clásico familiar',cat:'Recetas familiares',gs:['c','p'],a:false,emo:'c',
+   ings:['½ taza arroz blanco','100g pollo sin sal','Caldo casero sin sal','Zanahoria picada'],
+   pasos:['Cocer pollo en caldo sin sal. Reservar.','En la misma olla, agregar arroz y zanahoria. Hervir 18-20 min.','JULIE PAPILLA — licuar porción con caldo.','JULIE BLW — arroz suave con pollo deshebrado.','FAMILIA — sal y especias al gusto en el plato.'],
+   nota:'Separar la porción de Julie ANTES de salar. Un solo proceso, dos versiones.'},
+  {id:'r51',tit:'Enfrijoladas para Julie',e:'🫘',sub:'20 min · sabor mexicano',cat:'Recetas familiares',gs:['p','c'],a:false,emo:'c',
+   ings:['½ taza frijoles negros sin sal','Tortillas de maíz pequeñas','Pollo deshebrado sin sal'],
+   pasos:['Licuar frijoles con poca agua — sin sal.','Calentar la salsa suavemente.','JULIE — mojar trozo de tortilla en salsa de frijol + pollo.','Para papilla: licuar todo junto.','FAMILIA — agregar sal, crema y queso al gusto.'],
+   nota:'¡Julie puede comer comida mexicana desde bebé! Sin sal, sin crema, sin queso, sin chile.'},
+  {id:'r52',tit:'Guacamole bebé',e:'🥑',sub:'5 min · dip familiar',cat:'Recetas familiares',gs:['g','v'],a:false,emo:'v',
+   ings:['1 aguacate maduro','½ jitomate sin semillas','Unas gotas de limón'],
+   pasos:['Machacar aguacate con tenedor.','Picar finamente el jitomate y mezclar.','Agregar gotas de limón.','SIN sal, SIN chile, SIN cebolla para Julie.','FAMILIA — agregar sal, chile y cilantro en el plato.'],
+   nota:'La misma preparación base para todos. Julie come la versión sin condimentos.'},
+  {id:'r53',tit:'Puré de papa familiar',e:'🥔',sub:'20 min · clásico adaptado',cat:'Recetas familiares',gs:['v','g'],a:false,emo:'c',
+   ings:['3 papas medianas','2 cdas aceite de oliva','Leche materna o agua para Julie'],
+   pasos:['Hervir papas con piel ~20 min. Pelar y machacar.','JULIE — mezclar con aceite de oliva + leche materna — sin sal.','Separar porción de Julie.','FAMILIA — agregar mantequilla, leche y sal al gusto.'],
+   nota:'Separar la porción de Julie antes de condimentar. Un clásico que toda la familia disfruta.'},
+  {id:'r54',tit:'Quesadilla blanda de frijoles',e:'🫓',sub:'8 min · BLW rápido',cat:'Recetas familiares',gs:['c','p'],a:false,emo:'c',
+   ings:['1 tortilla de maíz pequeña','2 cdas frijoles refritos sin sal','Pollo deshebrado sin sal (opcional)'],
+   pasos:['Calentar tortilla en comal a fuego bajo.','Untar frijoles sin sal.','Agregar pollo deshebrado (opcional).','Doblar y calentar 1-2 min por lado.','Cortar en tiras largas para BLW.'],
+   nota:'Sin queso hasta introducirlo. Tortilla suave con frijoles = textura perfecta BLW. Muy rápida entre semana.'},
+  {id:'r55',tit:'Bowl de desayuno rápido',e:'🥣',sub:'5 min · entre semana',cat:'Recetas familiares',gs:['c','f','g'],a:false,emo:'c',
+   ings:['1 cubo de avena fort. (descongelado)','¼ fruta del día (plátano, durazno o manzana)','Punta de crema de almendra (si ya introducida)'],
+   pasos:['Descongelar cubo de avena la noche anterior en el refri.','Calentar a baño María o temperatura ambiente.','Machacar la fruta del día encima.','Agregar punta de crema de almendra si ya está introducida.','¡Listo en 5 minutos!'],
+   nota:'Con prep del sábado, este desayuno toma 5 min. Rota la fruta cada día. Perfecto para la abuela.'},
+,
+
+  {id:'r56',tit:'Flan de manzana',e:'🍮',sub:'30 min · postre bebé',cat:'Con leche materna',gs:['f','p'],a:true,emo:'a',
+   ings:['1 manzana roja pelada y picada','1 huevo entero ⚠','2 oz leche materna o fórmula'],
+   pasos:['Cocer la manzana al vapor o hervida 10-15 min hasta muy suave.','Licuar la manzana cocida con el huevo y las 2 oz de leche materna.','Verter en molde pequeño apto para baño maría.','Cocinar a baño maría a fuego medio-bajo 15-20 min.','Insertar palillo al centro — si sale limpio, está listo.','Dejar enfriar, desmoldar y servir.'],
+   nota:'⚠ Contiene huevo — solo después de confirmar tolerancia (días 8-10). Sin azúcar añadida. Textura suave perfecta para bebé.'},
+  {id:'r57',tit:'Avena cremosa con leche materna',e:'🥣',sub:'8 min · desayuno nutritivo',cat:'Con leche materna',gs:['c'],a:false,emo:'c',
+   ings:['2 cdas avena infantil fort.','3-4 oz leche materna (templada, nunca caliente)'],
+   pasos:['Preparar avena con agua caliente según indicaciones.','Dejar entibiar — no debe estar caliente.','Agregar la leche materna tibia (máximo 40°C).','Mezclar bien hasta textura cremosa.','Servir a temperatura corporal.'],
+   nota:'La leche materna NUNCA se calienta por encima de 40°C — destruye sus nutrientes y anticuerpos. Agregar siempre al final cuando la avena esté tibia.'},
+  {id:'r58',tit:'Papilla de zanahoria y leche materna',e:'🥕',sub:'20 min · cremosa y familiar',cat:'Con leche materna',gs:['v'],a:false,emo:'n',
+   ings:['1 zanahoria mediana cocida','2-3 oz leche materna','Unas gotas aceite de oliva'],
+   pasos:['Cocer zanahoria al vapor 15 min.','Licuar con aceite de oliva en el baby food maker.','Cuando la papilla esté tibia, agregar la leche materna.','Mezclar bien.','Servir a temperatura corporal.'],
+   nota:'La leche materna hace la papilla más suave y con sabor completamente familiar para Julie. Siempre agregar cuando esté tibio.'},
+  {id:'r59',tit:'Puré de papa con leche materna',e:'🥔',sub:'20 min · clásico cremoso',cat:'Con leche materna',gs:['v'],a:false,emo:'n',
+   ings:['1 papa mediana cocida','2 oz leche materna','1 cdita aceite de oliva'],
+   pasos:['Hervir papa hasta muy suave. Pelar.','Machacar con aceite de oliva.','Cuando esté tibia, incorporar leche materna poco a poco.','Batir hasta textura suave.','Ajustar consistencia con más leche materna.'],
+   nota:'Preparar el puré base el sábado sin la leche materna — agregar al momento de servir para conservar propiedades.'},
+  {id:'r60',tit:'Plátano con leche materna',e:'🍌',sub:'3 min · sin cocción',cat:'Con leche materna',gs:['f'],a:false,emo:'v',
+   ings:['½ plátano muy maduro','2 oz leche materna'],
+   pasos:['Machacar el plátano hasta suave.','Agregar la leche materna y mezclar.','Textura cremosa y líquida.','Servir de inmediato — no guardar.'],
+   nota:'La más rápida de todas. Sabor completamente familiar para Julie. Ideal para los primeros días.'},
+  {id:'r61',tit:'Avena con leche materna y fruta',e:'🌸',sub:'10 min · desayuno completo',cat:'Con leche materna',gs:['c','f'],a:false,emo:'c',
+   ings:['2 cdas avena infantil fort.','3 oz leche materna','¼ fruta del día machacada (manzana, durazno o pera cocida)'],
+   pasos:['Preparar avena con agua caliente. Dejar entibiar.','Machacar la fruta del día.','Cuando la avena esté tibia, agregar leche materna.','Incorporar la fruta.','Mezclar — textura cremosa y completa.'],
+   nota:'Cubre cereal + fruta en un solo bowl. Muy completo y nutritivo.'},
+  {id:'r62',tit:'Camote cremoso con leche materna',e:'🍠',sub:'25 min · dulce natural',cat:'Con leche materna',gs:['v'],a:false,emo:'v',
+   ings:['½ camote mediano cocido','2-3 oz leche materna','Pizca de canela'],
+   pasos:['Cocer camote hasta muy suave. Pelar.','Machacar o procesar en el baby food maker.','Cuando esté tibio, agregar leche materna y canela.','Mezclar hasta cremoso.'],
+   nota:'Dulzura natural del camote + leche materna = combinación perfecta para el baby food maker Chicco.'},
+  {id:'r63',tit:'Guía: leche materna para cocinar',e:'🍼',sub:'Guía completa · Chicco baby food maker',cat:'Con leche materna',gs:['c'],a:false,emo:'n',
+   ings:['Leche materna congelada (bolsas o cubos)','Baby food maker Chicco','Recipiente para descongelar'],
+   pasos:['1. DESCONGELAR — La noche anterior pasa la bolsa del congelador al refrigerador. Nunca a temperatura ambiente ni en microondas.',
+          '2. CALENTAR — Usa baño maría del Chicco a temperatura baja, o pon la bolsa bajo agua tibia del grifo 5-10 min.',
+          '3. TEMPERATURA SEGURA — Máximo 37-40°C (temperatura corporal). Prueba en tu muñeca — si se siente tibia, perfecta.',
+          '4. NUNCA microondas — destruye anticuerpos y crea puntos calientes peligrosos para Julie.',
+          '5. PARA COCINAR — Agregar la leche materna SIEMPRE al final, cuando el alimento esté tibio. Nunca cocinar con ella directo.',
+          '6. CON EL CHICCO — Vapor para verduras → licuar → enfriar → agregar leche materna al final.',
+          '7. SOBRANTE — Leche descongelada dura 24 hrs en refri. Si Julie no terminó la toma, desechar en 2 horas.',
+          '8. ORDEN DEL BANCO — Usar siempre la más antigua primero. Revisa fechas en las bolsas.'],
+   nota:'Regla de oro: NUNCA calentar la leche materna por encima de 40°C. Siempre al final de la preparación. Tu banco de leche es un tesoro — úsalo con cuidado y con orgullo. 🌸'},
+];
+
+const TRACKER_BASE=[
+  {n:'Res',g:'p',a:false},{n:'Sandía',g:'f',a:false},{n:'Chayote',g:'v',a:false},
+  {n:'Avena fort.',g:'c',a:false},{n:'Aceite oliva',g:'g',a:false},{n:'Zanahoria',g:'v',a:false},
+  {n:'Plátano',g:'f',a:false},{n:'Huevo',g:'p',a:true},{n:'Ejote',g:'v',a:false},
+  {n:'Almendra',g:'g',a:true},{n:'Papa',g:'v',a:false},{n:'Pollo',g:'p',a:false},
+  {n:'Frijoles',g:'p',a:false},{n:'Durazno',g:'f',a:false},{n:'Aguacate',g:'g',a:false},
+  {n:'Brócoli',g:'v',a:false},{n:'Mango',g:'f',a:false},{n:'Lentejas',g:'p',a:false},
+  {n:'Cacahuate',g:'g',a:true},{n:'Garbanzo',g:'p',a:false},{n:'Camote',g:'v',a:false},
+  {n:'Manzana',g:'f',a:false},{n:'Calabaza',g:'v',a:false},{n:'Salmón',g:'p',a:false},
+  {n:'Hígado pollo',g:'p',a:false},{n:'Pera',g:'f',a:false},{n:'Espinaca',g:'v',a:false},
+];
+
+const COMPRAS_DATA=[
+  {cat:'🥩 Proteínas', items:['Carne de res molida sin sal (300g)','Huevos (1 docena)','Pechuga de pollo sin piel','Hígado de pollo (100g)','Frijoles negros secos o sin sal','Lentejas rojas (bolsa)']},
+  {cat:'🥦 Verduras',  items:['Chayote (3-4 piezas)','Zanahoria (bolsa)','Ejotes (1 manojo)','Papa (4-5 medianas)','Brócoli (1 pieza)','Camote (2 piezas)','Calabaza (1 pieza)']},
+  {cat:'🍉 Frutas',    items:['Sandía sin semillas','Plátanos maduros (racimo)','Manzanas (3-4)','Pera (3)','Mango (2)','Durazno (3-4)']},
+  {cat:'🌾 Cereales',  items:['Avena infantil FORTIFICADA (Nestum avena o similar)']},
+  {cat:'🫒 Grasas',    items:['Aceite de oliva extra virgen','Almendras crudas sin sal (200g)','Aguacates maduros (3)']},
+  {cat:'🧴 Utensilios',items:['Charola de hielos BPA-free (con tapa)','Bolsas de silicón reutilizables','Frasco de vidrio para crema de almendra','Etiquetas o marcador para fechar']},
+];
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+let S={weekOff:0,selDate:null,overrides:{},aliSel:{},exp:{},prob:{},recDone:{},compDone:{},agua:{}};
+function load(){try{const d=JSON.parse(localStorage.getItem(SK));if(d)S={...S,...d};}catch(e){}}
+function save(){try{localStorage.setItem(SK,JSON.stringify(S));}catch(e){}}
+
+// ── HELPERS ───────────────────────────────────────────────────────────────
+function dk(d){return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();}
+function kd(k){const[y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d);}
+function diff(d){return Math.floor((new Date(d.getFullYear(),d.getMonth(),d.getDate())-START)/86400000)+1;}
+function getWeek(){
+  const t=new Date();t.setHours(0,0,0,0);
+  const sun=new Date(t);sun.setDate(t.getDate()-t.getDay()+(S.weekOff*7));
+  return Array.from({length:7},(_,i)=>{const d=new Date(sun);d.setDate(sun.getDate()+i);return d;});
+}
+function getMenu(n){if(n<1||n>15)return null;return{...MENU_BASE[n-1],...(S.overrides[n]||{})};}
+
+// ── NAV ───────────────────────────────────────────────────────────────────
+function nav(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-'+name).classList.add('on');
+  btn.classList.add('on');
+  if(name==='alimentos')renderAlimentos();
+  if(name==='recetas')renderRecetas();
+  if(name==='progreso')renderProgreso();
+  if(name==='compras')renderCompras();
+}
+
+// ── HOY ───────────────────────────────────────────────────────────────────
+function prevW(){S.weekOff--;save();renderHoy();}
+function nextW(){S.weekOff++;save();renderHoy();}
+
+function renderHoy(){
+  const days=getWeek();
+  const f=days[0],l=days[6];
+  document.getElementById('wklbl').textContent=`${f.getDate()} ${MESES[f.getMonth()]} – ${l.getDate()} ${MESES[l.getMonth()]}`;
+  const todayK=dk(new Date()),selK=S.selDate||todayK;
+  const grid=document.getElementById('daygrid');grid.innerHTML='';
+  days.forEach(d=>{
+    const k=dk(d),n=diff(d);
+    const el=document.createElement('div');
+    el.className='dcell'+(k===todayK?' today':'')+(k===selK?' sel':'')+(n>=1&&n<=15?' food':'');
+    el.innerHTML=`<span class="dn">${DIAS[d.getDay()]}</span><span class="dd">${d.getDate()}</span><span class="ddot"></span>`;
+    el.onclick=()=>{S.selDate=k;save();renderHoy();};
+    grid.appendChild(el);
+  });
+  const n=diff(kd(selK));
+  document.getElementById('day-chip').textContent=n>=1&&n<=15?'Día '+n:'—';
+  const body=document.getElementById('hoy-body');
+
+  if(n<1){body.innerHTML=`<div class="card" style="text-align:center;padding:28px 16px;"><div style="font-size:36px;margin-bottom:10px;">🌸</div><div style="font-size:15px;font-weight:600;margin-bottom:6px;color:#1C1B1F;">¡Ya casi!</div><div style="font-size:13px;color:#5C5C6B;">La alimentación complementaria<br>empieza el <strong>10 de mayo de 2026</strong>.</div></div>`;return;}
+  if(n>15){body.innerHTML=`<div class="card" style="text-align:center;padding:28px 16px;color:#5C5C6B;font-size:13px;">¡Excelente trabajo completando los 15 días! 🎉<br>Continúa explorando nuevos alimentos.</div>`;return;}
+
+  const m=getMenu(n);body.innerHTML='';
+
+  // Porcion badge
+  const pb=document.createElement('div');
+  pb.innerHTML=`<span class="porcion-badge">🍽 Porción Julie: ¼ a ½ taza total en el plato</span>`;
+  pb.querySelector('.porcion-badge').style.cssText='display:inline-flex;align-items:center;gap:5px;background:#FDE68A;color:#92400E;font-size:11px;font-weight:600;padding:4px 10px;border-radius:20px;margin-bottom:11px;';
+  body.appendChild(pb);
+
+  // Nuevo del día
+  const nc=document.createElement('div');
+  nc.className=`ncard ${m.a?'nc-a':'nc-n'}`;
+  nc.innerHTML=`<div class="nctag ${m.a?'a':'n'}">${m.a?'⚠ Alérgeno — observar 3 días':'Alimento nuevo del día'}</div>
+    <div class="ncnom">${m.nuevo}</div>
+    <div class="ncnote">${m.nota}</div>
+    ${m.a?'<div class="abox">Observar: sarpullido, vómito o diarrea en las 2 horas siguientes. Suspender y consultar al pediatra si hay reacción.</div>':''}`;
+  body.appendChild(nc);
+
+  // Plato 5 grupos
+  const pc=document.createElement('div');pc.className='card';
+  let ph=`<div class="stitle">Plato del día — 5 grupos</div>`;
+  GRUPOS_DEF.forEach(g=>{
+    const val=m[g.k];
+    ph+=`<div class="grow"><span class="gdot ${g.dot}"></span><span class="glbl">${g.lbl}</span><span class="gval">${val||'<span style="color:#A0A0B0;font-size:12px;">Aún no introducido</span>'}</span><button class="gbtn" onclick="openM('${g.k}',${n})">editar</button></div>`;
+  });
+  pc.innerHTML=ph;body.appendChild(pc);
+
+  // Agua tracker (1 oz por comida = 3 oz aprox según libro 6-8m)
+  const todayAguaKey=dk(kd(selK));
+  const aguaDone=S.agua[todayAguaKey]||[];
+  const aw=document.createElement('div');aw.className='agua-card';
+  aw.innerHTML=`<div class="agua-title-row"><div class="stitle" style="margin:0;">💧 Agua del día</div><div class="agua-meta">Meta: 2-3 oz • 1 oz por comida</div></div>
+    <div class="agua-vasos" id="agua-vasos"></div>
+    <div class="agua-note">Según el libro: 6-8 meses = 2-3 onzas al día, 1 oz después de cada comida</div>`;
+  body.appendChild(aw);
+  const vasosEl=document.getElementById('agua-vasos');
+  ['Desayuno','Comida','Cena'].forEach((lbl,i)=>{
+    const done=aguaDone.includes(i);
+    const btn=document.createElement('button');
+    btn.className='vaso-btn'+(done?' done':'');
+    btn.innerHTML=`<span class="vaso-ico">💧</span><span class="vaso-lbl">${lbl}</span>`;
+    btn.onclick=()=>{
+      const cur=S.agua[todayAguaKey]||[];
+      if(cur.includes(i))S.agua[todayAguaKey]=cur.filter(x=>x!==i);
+      else S.agua[todayAguaKey]=[...cur,i];
+      save();renderHoy();
+    };
+    vasosEl.appendChild(btn);
+  });
+
+  // Horario
+  const hc=document.createElement('div');hc.className='card';
+  let hh=`<div class="stitle">Rutina del día — para la abuela</div>`;
+  HORARIO.forEach(h=>{
+    const pc2=h.t==='l'?'hpl':h.t==='c'?'hpc':h.t==='j'?'hpa':'hps';
+    const pl=h.t==='l'?'leche':h.t==='c'?'comida':h.t==='j'?'actividad':'siesta';
+    hh+=`<div class="hrow"><span class="hhora">${h.h}</span><span class="htxt">${h.txt}</span><span class="hpill ${pc2}">${pl}</span></div>`;
+  });
+  hc.innerHTML=hh;body.appendChild(hc);
+
+  // Recetas sugeridas
+  const recs=RECETAS.filter(r=>r.gs.some(g=>m[g])).slice(0,3);
+  if(recs.length){
+    const rc=document.createElement('div');rc.className='card';
+    let rh=`<div class="stitle">Recetas para hoy</div>`;
+    recs.forEach(r=>{
+      rh+=`<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid #F0EEF8;cursor:pointer;" onclick="goRec('${r.id}')">
+        <span style="font-size:22px;">${r.e}</span>
+        <div style="flex:1;"><div style="font-size:13px;font-weight:500;color:#1C1B1F;">${r.tit}</div><div style="font-size:11px;color:#A0A0B0;margin-top:1px;">${r.sub}</div></div>
+        <span style="font-size:14px;color:#DB2777;">›</span>
+      </div>`;
+    });
+    rc.innerHTML=rh;body.appendChild(rc);
+  }
+}
+
+function goRec(id){
+  document.querySelector('[onclick*="recetas"]').click();
+  setTimeout(()=>{const el=document.getElementById('rc-'+id);if(el){el.scrollIntoView({behavior:'smooth'});const t=el.querySelector('.rtop');if(t)t.click();}},150);
+}
+
+// ── MODAL ─────────────────────────────────────────────────────────────────
+let mCtx={};
+function openM(grupo,dia){
+  mCtx={grupo,dia};
+  const labels={c:'Cereal',v:'Verdura',p:'Proteína',f:'Fruta',g:'Grasa'};
+  document.getElementById('mtit').textContent='Editar '+labels[grupo];
+  const cur=getMenu(dia)[grupo]||'';
+  const opts=LIBRO[grupo]?.opts||[];
+  const grid=document.getElementById('mopts');grid.innerHTML='';
+  opts.forEach(op=>{
+    const b=document.createElement('button');
+    b.className='mopt'+(cur.includes(op.replace(' ⚠',''))?' sel':'');
+    b.textContent=op;b.onclick=()=>b.classList.toggle('sel');
+    grid.appendChild(b);
+  });
+  document.getElementById('modal').classList.add('open');
+}
+function saveM(){
+  const{grupo,dia}=mCtx;
+  const sels=[...document.querySelectorAll('#mopts .mopt.sel')].map(b=>b.textContent.replace(' ⚠',''));
+  if(!S.overrides[dia])S.overrides[dia]={};
+  S.overrides[dia][grupo]=sels.length?sels.join('/'):null;
+  save();closeM();renderHoy();
+}
+function closeM(){document.getElementById('modal').classList.remove('open');}
+
+// ── ALIMENTOS ─────────────────────────────────────────────────────────────
+function renderAlimentos(){
+  const c=document.getElementById('ali-grupos');c.innerHTML='';
+  const dotMap={c:'gc',v:'gv',p:'gp',f:'gf',g:'gg'};
+  Object.entries(LIBRO).forEach(([k,gr])=>{
+    const sec=document.createElement('div');sec.className='grupo-section';
+    let html=`<div class="grupo-hdr"><span class="grupo-hdr-dot gdot ${dotMap[k]}"></span><span class="grupo-hdr-title">${gr.label}</span></div><div class="ali-grid">`;
+    gr.opts.forEach(op=>{
+      const clean=op.replace(' ⚠','');
+      const isA=op.includes('⚠');
+      const isSel=!!(S.aliSel[k]&&S.aliSel[k].includes(clean));
+      html+=`<div class="ali-chip${isSel?' sc sc-'+k:''}" onclick="togAli('${k}','${clean}',this)">
+        <span class="gdot ${dotMap[k]}" style="width:8px;height:8px;flex-shrink:0;"></span>
+        <span class="ali-chip-name">${op}</span>
+        ${isA?'<span class="adot"></span>':''}
+      </div>`;
+    });
+    html+='</div>';sec.innerHTML=html;c.appendChild(sec);
+  });
+}
+function togAli(g,n,el){
+  if(!S.aliSel[g])S.aliSel[g]=[];
+  const i=S.aliSel[g].indexOf(n);
+  if(i>=0){S.aliSel[g].splice(i,1);el.classList.remove('sc','sc-'+g);}
+  else{S.aliSel[g].push(n);el.classList.add('sc','sc-'+g);}
+  save();
+}
+function aprobar(){
+  const btn=document.querySelector('.aprobar-btn');
+  btn.textContent='✓ Guardado en tu menú';
+  btn.style.background='#34D399';
+  setTimeout(()=>{btn.textContent='Guardar selección ✓';btn.style.background='';},2500);
+  save();
+}
+
+// ── RECETAS ───────────────────────────────────────────────────────────────
+let recCat='Todas';
+function renderRecetas(){
+  const catsEl=document.getElementById('rec-cats');catsEl.innerHTML='';
+  REC_CATS.forEach(c=>{
+    const b=document.createElement('button');
+    b.className='rcbtn'+(c===recCat?' on':'');
+    b.textContent=c;b.onclick=()=>{recCat=c;renderRecetas();};
+    catsEl.appendChild(b);
+  });
+  const list=document.getElementById('rec-list');list.innerHTML='';
+  const filtered=RECETAS.filter(r=>recCat==='Todas'||r.cat===recCat);
+  if(recCat==='Todas'){
+    const bycat={};
+    filtered.forEach(r=>{if(!bycat[r.cat])bycat[r.cat]=[];bycat[r.cat].push(r);});
+    Object.entries(bycat).forEach(([cat,recs])=>{
+      const sec=document.createElement('div');sec.className='cat-sec';
+      sec.innerHTML=`<div class="cat-lbl">${cat}</div>`;
+      recs.forEach(r=>sec.appendChild(makeRec(r)));
+      list.appendChild(sec);
+    });
+  }else{filtered.forEach(r=>list.appendChild(makeRec(r)));}
+}
+function makeRec(r){
+  const isDone=!!S.recDone[r.id];
+  const emoClass=r.a?'re-a':r.emo==='v'?'re-v':r.emo==='c'?'re-c':'re-n';
+  const card=document.createElement('div');card.className='rcard';card.id='rc-'+r.id;
+  const tags=r.gs.map(g=>`<span class="rtag rt-${g}">${{c:'cereal',v:'verdura',p:'proteína',f:'fruta',g:'grasa'}[g]}</span>`).join('');
+  const atag=r.a?'<span class="rtag rt-a">alérgeno ⚠</span>':'';
+  card.innerHTML=`<div class="rtop" onclick="togRec('${r.id}')">
+    <div class="remo ${emoClass}">${r.e}</div>
+    <div class="rinfo"><div class="rtit">${r.tit}</div><div class="rsub">${r.sub}</div><div class="rtags">${tags}${atag}</div></div>
+    <span class="rchev" id="rch-${r.id}">▼</span>
+  </div>
+  <div class="rbody" id="rb-${r.id}">
+    <div class="rsec">Ingredientes</div>
+    ${r.ings.map(i=>`<div class="ring">${i}</div>`).join('')}
+    <div class="rsec">Preparación</div>
+    ${r.pasos.map((p,i)=>`<div class="rpaso"><span class="rpn">${i+1}.</span><span class="rpt">${p}</span></div>`).join('')}
+    <div class="rnota">${r.nota}</div>
+    <button class="rmark ${isDone?'on':'off'}" onclick="togRecDone('${r.id}',event)">${isDone?'✓ Cocinada esta semana':'Marcar como cocinada'}</button>
+  </div>`;
+  return card;
+}
+function togRec(id){const b=document.getElementById('rb-'+id);const ch=document.getElementById('rch-'+id);const o=b.classList.toggle('open');ch.classList.toggle('open',o);}
+function togRecDone(id,e){e.stopPropagation();S.recDone[id]=!S.recDone[id];save();renderRecetas();}
+
+// ── PROGRESO ──────────────────────────────────────────────────────────────
+function renderProgreso(){
+  const prob=Object.values(S.prob).filter(Boolean).length;
+  const alergs=TRACKER_BASE.filter(t=>t.a&&S.prob[t.n]).length;
+  const maxExp=Math.max(0,...Object.values(S.exp).map(Number));
+  const diaN=Math.max(1,Math.min(15,diff(new Date())));
+  document.getElementById('stats-grid').innerHTML=`
+    <div class="sc2 scr"><div class="sc-ico">🥕</div><div class="sc-num">${prob}</div><div class="sc-lbl">Alimentos probados</div></div>
+    <div class="sc2 scl"><div class="sc-ico">📅</div><div class="sc-num">${diaN}</div><div class="sc-lbl">Día actual</div></div>
+    <div class="sc2 scp"><div class="sc-ico">⚠️</div><div class="sc-num">${alergs}</div><div class="sc-lbl">Alérgenos sin reacción</div></div>
+    <div class="sc2 scm"><div class="sc-ico">🔁</div><div class="sc-num">${maxExp}</div><div class="sc-lbl">Máx. exposiciones</div></div>`;
+  const dmap={p:'gp',v:'gv',c:'gc',f:'gf',g:'gg'};
+  const list=document.getElementById('ali-tracker');list.innerHTML='';
+  TRACKER_BASE.forEach(t=>{
+    const exp=S.exp[t.n]||0,isP=!!S.prob[t.n];
+    const row=document.createElement('div');row.className='alirow';
+    let dh='<div class="expdots">';
+    for(let i=0;i<9;i++){const done=i<exp;dh+=`<div class="exdot ${done?(t.a?'da':'dn'):''}" onclick="togExp('${t.n}',${i},${t.a})">${done?'✓':''}</div>`;}
+    dh+='</div>';
+    row.innerHTML=`<span class="alidot gdot ${dmap[t.g]}"></span>
+      <div class="aliinfo">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;"><span class="aliname">${t.n}</span>${t.a?'<span class="abadge">alérgeno</span>':''}</div>
+        <div class="alicnt">${exp}/9 exposiciones</div>${dh}
+      </div>
+      <button class="mkbtn ${isP?'on':'off'}" onclick="togProb('${t.n}')">${isP?'✓ probada':'marcar'}</button>`;
+    list.appendChild(row);
+  });
+}
+function togExp(n,i,isA){const c=S.exp[n]||0;S.exp[n]=i+1===c?c-1:i+1;if(S.exp[n]>0)S.prob[n]=true;save();renderProgreso();}
+function togProb(n){S.prob[n]=!S.prob[n];if(S.prob[n]&&!S.exp[n])S.exp[n]=1;save();renderProgreso();}
+
+// ── COMPRAS ───────────────────────────────────────────────────────────────
+function renderCompras(){
+  let total=0,done=0;
+  const body=document.getElementById('compras-body');body.innerHTML='';
+  COMPRAS_DATA.forEach(cat=>{
+    const lbl=document.createElement('div');lbl.className='clbl';lbl.textContent=cat.cat;body.appendChild(lbl);
+    const card=document.createElement('div');card.className='card';card.style.padding='8px 14px';
+    cat.items.forEach(item=>{
+      total++;const k=cat.cat+'::'+item;const isDone=!!S.compDone[k];if(isDone)done++;
+      const row=document.createElement('div');row.className='crow';
+      row.innerHTML=`<div class="chk ${isDone?'on':''}">${isDone?'✓':''}</div><span class="ctxt ${isDone?'done':''}">${item}</span>`;
+      row.onclick=()=>{S.compDone[k]=!S.compDone[k];save();renderCompras();};
+      card.appendChild(row);
+    });
+    body.appendChild(card);
+  });
+  document.getElementById('pbar').style.width=Math.round(done/total*100)+'%';
+}
+function resetC(){S.compDone={};save();renderCompras();}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+load();
+if(!S.selDate)S.selDate=dk(new Date());
+renderHoy();
+</script>
+</body>
+</html>
